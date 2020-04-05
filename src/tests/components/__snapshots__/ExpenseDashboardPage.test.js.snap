@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should render dashboard 1`] = `
+<div>
+  <[object Object] />
+  <[object Object] />
+  <[object Object] />
+</div>
+`;
