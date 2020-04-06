@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import Select from 'react-select'
 
 // AirBnB Date picker imports
 import { SingleDatePicker } from 'react-dates';
@@ -21,8 +22,10 @@ export default class ExpenseForm extends React.Component {
             note: props.expense ? props.expense.note : '',
             amount: props.expense ? (props.expense.amount / 100).toString() : '',
             createdAt: props.expense ? moment(props.expense.createdAt) : moment(),
+            category: props.expense ? props.expense.category : '',
             calendarFocused: false,
-            error: ''
+            error: '',
+            categories: props.categories.map((category, id) => ({ 'value': category, 'label': category }))
         };
     };
     onDescriptionChange = (e) => {
@@ -45,14 +48,17 @@ export default class ExpenseForm extends React.Component {
             this.setState(() => ({ createdAt }));
         }
     };
+    onCategoryChange = (selectedOption) => {
+        this.setState(() => ({ category: selectedOption.value }));
+    };
     onFocusChange = ({ focused }) => {
         this.setState(() => ({ calendarFocused: focused }));
     };
     onSubmit = (e) => {
         e.preventDefault();
 
-        if (!this.state.description || !this.state.amount) {
-            this.setState(() => ({ error: 'Please provide description and amount' }))
+        if (!this.state.description || !this.state.amount || !this.state.category) {
+            this.setState(() => ({ error: 'Please provide description, amount and category' }))
         } else {
             this.setState(() => ({ error: '' }));
 
@@ -61,7 +67,9 @@ export default class ExpenseForm extends React.Component {
                 note: this.state.note,
                 //parsefloat only accepts . for decimal 
                 amount: parseFloat((this.state.amount).replace(',', '.'), 10) * 100,
-                createdAt: this.state.createdAt.valueOf()
+                createdAt: this.state.createdAt.valueOf(),
+                category: this.state.category,
+
             });
         }
     }
@@ -72,7 +80,7 @@ export default class ExpenseForm extends React.Component {
                 <input
                     type="text"
                     placeholder="Description"
-                    autoFocus
+                    autoFocus   
                     className="text-input"
                     value={this.state.description}
                     onChange={this.onDescriptionChange}
@@ -83,6 +91,11 @@ export default class ExpenseForm extends React.Component {
                     className="text-input"
                     value={this.state.amount}
                     onChange={this.onAmountChange}
+                />
+                <Select
+                    defaultValue={this.state.category ? { label: this.state.category, value: this.state.category } : ''}
+                    onChange={this.onCategoryChange}
+                    options={this.state.categories}
                 />
                 <SingleDatePicker
                     date={this.state.createdAt}

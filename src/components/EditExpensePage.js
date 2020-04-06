@@ -22,7 +22,7 @@ export class EditExpensePage extends React.Component {
           </div>
         </div>
         <div className="content-container">
-          <ExpenseForm expense={this.props.expense} onSubmit={this.onSubmit} />
+          <ExpenseForm expense={this.props.expense} categories={this.props.categories} onSubmit={this.onSubmit} />
           <button className="button button--secondary" onClick={this.onRemove}>Remove expense </button>
         </div>
       </div>
@@ -31,7 +31,8 @@ export class EditExpensePage extends React.Component {
 };
 
 const mapStateToProps = (state, props) => ({
-  expense: state.expenses.find(expense => expense.id === props.match.params.id)
+  expense: state.expenses.find(expense => expense.id === props.match.params.id),
+  categories: state.categories.map(({ description }) => description)
 });
 
 const mapDispatchToProps = (dispatch, props) => ({

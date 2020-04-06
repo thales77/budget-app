@@ -18,6 +18,7 @@ export class AddExpensePage extends React.Component {
         </div>
         <div className="content-container">
           <ExpenseForm
+            categories={this.props.categories}
             onSubmit={this.onSubmit}
           />
         </div>
@@ -25,6 +26,10 @@ export class AddExpensePage extends React.Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+    categories: state.categories.map(({ description }) => description)
+});
 
 //we pass dispatch through props
 //theoretically we already have access to dispatch
@@ -34,4 +39,4 @@ const mapDispatchToProps = dispatch => ({
   startAddExpense: expense => dispatch(startAddExpense(expense))
 });
 
-export default connect(undefined, mapDispatchToProps)(AddExpensePage);
+export default connect(mapStateToProps, mapDispatchToProps)(AddExpensePage);
