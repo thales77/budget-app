@@ -68,3 +68,13 @@
 
 }
 
+
+.list-item__category {
+
+    //desktop
+    @media (min-width: $desktop-breakpoint) {
+        margin: 0;
+        padding-left: $s-size;
+    }
+
+}
