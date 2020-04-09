@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import Select from 'react-select'
+import Select from 'react-select';
 
 // AirBnB Date picker imports
 import { SingleDatePicker } from 'react-dates';
@@ -9,113 +9,118 @@ import { SingleDatePicker } from 'react-dates';
 const now = moment();
 // console.log(now.format('MMM Do, YYYY'));
 
-
-
 export default class ExpenseForm extends React.Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        //if we are editing, setup state from props passed by parent component
-        //else if we are adding a new expense setup empty state
-        this.state = {
-            description: props.expense ? props.expense.description : '',
-            note: props.expense ? props.expense.note : '',
-            amount: props.expense ? (props.expense.amount / 100).toString() : '',
-            createdAt: props.expense ? moment(props.expense.createdAt) : moment(),
-            category: props.expense ? props.expense.category : '',
-            calendarFocused: false,
-            error: '',
-            categories: props.categories.map((category, id) => ({ 'value': category, 'label': category }))
-        };
+    //if we are editing, setup state from props passed by parent component
+    //else if we are adding a new expense setup empty state
+    this.state = {
+      description: props.expense ? props.expense.description : '',
+      note: props.expense ? props.expense.note : '',
+      amount: props.expense ? (props.expense.amount / 100).toString() : '',
+      createdAt: props.expense ? moment(props.expense.createdAt) : moment(),
+      category: props.expense ? props.expense.category : '',
+      calendarFocused: false,
+      error: '',
+      categories: props.categories.map((category, id) => ({
+        value: category,
+        label: category,
+      })),
     };
-    onDescriptionChange = (e) => {
-        const description = e.target.value;
-        this.setState(() => ({ description }));
-    };
-    onNoteChange = (e) => {
-        const note = e.target.value;
-        this.setState(() => ({ note }));
-    };
-    onAmountChange = (e) => {
-        const amount = e.target.value;
+  }
+  onDescriptionChange = (e) => {
+    const description = e.target.value;
+    this.setState(() => ({ description }));
+  };
+  onNoteChange = (e) => {
+    const note = e.target.value;
+    this.setState(() => ({ note }));
+  };
+  onAmountChange = (e) => {
+    const amount = e.target.value;
 
-        if (!amount || amount.match(/^\d{1,}(\,\d{0,2})?$/)) {
-            this.setState(() => ({ amount }));
-        }
-    };
-    onDateChange = (createdAt) => {
-        if (createdAt) {
-            this.setState(() => ({ createdAt }));
-        }
-    };
-    onCategoryChange = (selectedOption) => {
-        this.setState(() => ({ category: selectedOption.value }));
-    };
-    onFocusChange = ({ focused }) => {
-        this.setState(() => ({ calendarFocused: focused }));
-    };
-    onSubmit = (e) => {
-        e.preventDefault();
-
-        if (!this.state.description || !this.state.amount || !this.state.category) {
-            this.setState(() => ({ error: 'Please provide description, amount and category' }))
-        } else {
-            this.setState(() => ({ error: '' }));
-
-            this.props.onSubmit({
-                description: this.state.description,
-                note: this.state.note,
-                //parsefloat only accepts . for decimal 
-                amount: parseFloat((this.state.amount).replace(',', '.'), 10) * 100,
-                createdAt: this.state.createdAt.valueOf(),
-                category: this.state.category,
-
-            });
-        }
+    if (!amount || amount.match(/^\d{1,}(\,\d{0,2})?$/)) {
+      this.setState(() => ({ amount }));
     }
-    render() {
-        return (
-            <form className="form" onSubmit={this.onSubmit}>
-                {this.state.error && <p className="form__error">{this.state.error}</p>}
-                <input
-                    type="text"
-                    placeholder="Description"
-                    autoFocus   
-                    className="text-input"
-                    value={this.state.description}
-                    onChange={this.onDescriptionChange}
-                />
-                <input
-                    type="text"
-                    placeholder="Amount"
-                    className="text-input"
-                    value={this.state.amount}
-                    onChange={this.onAmountChange}
-                />
-                <Select
-                    defaultValue={this.state.category ? { label: this.state.category, value: this.state.category } : ''}
-                    onChange={this.onCategoryChange}
-                    options={this.state.categories}
-                />
-                <SingleDatePicker
-                    date={this.state.createdAt}
-                    onDateChange={this.onDateChange}
-                    focused={this.state.calendarFocused}
-                    onFocusChange={this.onFocusChange}
-                    numberOfMonths={1}
-                    isOutsideRange={(day) => false}
-                />
-                <textarea
-                    className="textarea"
-                    placeholder="Add a note for your expense (optional)"
-                    value={this.state.note}
-                    onChange={this.onNoteChange}
-                >
-                </textarea>
-                <div>
-                    <button className="button">Save Expense</button>
-                </div>
-            </form>
-        );
-    };
-};
+  };
+  onDateChange = (createdAt) => {
+    if (createdAt) {
+      this.setState(() => ({ createdAt }));
+    }
+  };
+  onCategoryChange = (selectedOption) => {
+    this.setState(() => ({ category: selectedOption.value }));
+  };
+  onFocusChange = ({ focused }) => {
+    this.setState(() => ({ calendarFocused: focused }));
+  };
+  onSubmit = (e) => {
+    e.preventDefault();
+
+    if (!this.state.description || !this.state.amount || !this.state.category) {
+      this.setState(() => ({
+        error: 'Please provide description, amount and category',
+      }));
+    } else {
+      this.setState(() => ({ error: '' }));
+
+      this.props.onSubmit({
+        description: this.state.description,
+        note: this.state.note,
+        //parsefloat only accepts . for decimal
+        amount: parseFloat(this.state.amount.replace(',', '.'), 10) * 100,
+        createdAt: this.state.createdAt.valueOf(),
+        category: this.state.category,
+      });
+    }
+  };
+  render() {
+    return (
+      <form className="form" onSubmit={this.onSubmit}>
+        {this.state.error && <p className="form__error">{this.state.error}</p>}
+        <input
+          type="text"
+          placeholder="Description"
+          autoFocus
+          className="text-input"
+          value={this.state.description}
+          onChange={this.onDescriptionChange}
+        />
+        <input
+          type="text"
+          placeholder="Amount"
+          className="text-input"
+          value={this.state.amount}
+          onChange={this.onAmountChange}
+        />
+        <Select
+          defaultValue={
+            this.state.category
+              ? { label: this.state.category, value: this.state.category }
+              : ''
+          }
+          onChange={this.onCategoryChange}
+          options={this.state.categories}
+        />
+        <SingleDatePicker
+          date={this.state.createdAt}
+          onDateChange={this.onDateChange}
+          focused={this.state.calendarFocused}
+          onFocusChange={this.onFocusChange}
+          numberOfMonths={1}
+          isOutsideRange={(day) => false}
+        />
+        <textarea
+          className="textarea"
+          placeholder="Add a note for your expense (optional)"
+          value={this.state.note}
+          onChange={this.onNoteChange}
+        ></textarea>
+        <div>
+          <button className="button">Save Expense</button>
+        </div>
+      </form>
+    );
+  }
+}
